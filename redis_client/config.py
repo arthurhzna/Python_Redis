@@ -17,7 +17,7 @@ class RedisConfig:
     decode_responses: bool = True
     
     @classmethod
-    def from_env(cls, env_file: str = ".env") -> "RedisConfig":
+    def from_env(cls, REDIS_ADDR: str, REDIS_PORT: int, REDIS_PASSWORD: str) -> "RedisConfig":
         """
         Load Redis configuration from environment variables
         
@@ -30,11 +30,10 @@ class RedisConfig:
         Raises:
             ValueError: If required environment variables are missing
         """
-        load_dotenv(env_file, override=True)
         
-        host = os.getenv("REDIS_ADDR")
-        port = os.getenv("REDIS_PORT")
-        password = os.getenv("REDIS_PASSWORD")
+        host = REDIS_ADDR
+        port = REDIS_PORT
+        password = REDIS_PASSWORD
         
         if not host:
             raise ValueError("REDIS_ADDR environment variable is required")

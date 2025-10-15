@@ -34,7 +34,7 @@ class RedisClient:
         self._connection.connect()
         
         # Initialize operation handlers
-        self._client = self._connection.client
+        self._client = self._connection.client #sudah memiliki object redis  Optional[redis_client.Redis] = None
         self.type_checker = KeyTypeChecker(self._client)
         self.string = StringOperations(self._client)
         self.list = ListOperations(self._client)
@@ -42,17 +42,19 @@ class RedisClient:
         self.set = SetOperations(self._client)
     
     @classmethod
-    def from_env(cls, env_file: str = ".env") -> "RedisClient":
+    def from_env(cls, REDIS_ADDR: str, REDIS_PORT: int, REDIS_PASSWORD: str) -> "RedisClient":
         """
         Create Redis client from environment variables
-        
+
         Args:
-            env_file: Path to .env file
+            REDIS_ADDR: Redis address
+            REDIS_PORT: Redis port
+            REDIS_PASSWORD: Redis password
             
         Returns:
             RedisClient instance
         """
-        config = RedisConfig.from_env(env_file)
+        config = RedisConfig.from_env(REDIS_ADDR, REDIS_PORT, REDIS_PASSWORD)
         return cls(config)
     
     @property
@@ -67,7 +69,7 @@ class RedisClient:
         Returns:
             True if connected
         """
-        return self._client.ping()
+        return self._client.ping() #<-- langsung dari library redis pingnya
     
     def get_key_type(self, key: str) -> str:
         """
@@ -91,7 +93,7 @@ class RedisClient:
         Returns:
             True if key exists
         """
-        return self._client.exists(key) > 0
+        return self._client.exists(key) > 0 #<-- langsung dari library redis existsnya
     
     def delete_key(self, *keys: str) -> int:
         """
